@@ -45,6 +45,28 @@ var mazeCharacters = map[string]rune{
 	"X:X XX": '\u2524',
 	"X: XXX": '\u252C',
 	"X:XXXX": '\u253C',
+	"Start":  'S',
+	"End":    'E',
+	"Path":   '\u2593',
+	// "X:    ": '\u2593',
+	// "X:X   ": '\u2593',
+	// "X: X  ": '\u2593',
+	// "X:  X ": '\u2593',
+	// "X:   X": '\u2593',
+	// "X:XX  ": '\u2593',
+	// "X:X X ": '\u2593',
+	// "X:X  X": '\u2593',
+	// "X: XX ": '\u2593',
+	// "X: X X": '\u2593',
+	// "X:  XX": '\u2593',
+	// "X:XXX ": '\u2593',
+	// "X:XX X": '\u2593',
+	// "X:X XX": '\u2593',
+	// "X: XXX": '\u2593',
+	// "X:XXXX": '\u2593',
+	// "Start":  'S',
+	// "End":    'E',
+	// "Path":   '*',
 }
 
 func (theMaze maze) isWall(x, y int) bool {
@@ -103,19 +125,51 @@ func (theMaze maze) wallShape(x, y int) string {
 	return shape
 }
 
-func (theMaze maze) display() {
+func (theMaze maze) display(sol string) {
 	fmt.Printf("---------------------------\nName: %v\nPath: %v\n%v\n---------------------------\n", theMaze.Name, theMaze.MazePath, theMaze.Message)
 
-	for y := -1; y <= theMaze.Height; y++ {
-		for x := -1; x <= theMaze.Width; x++ {
+	// layout the maze walls
+	disp := make([][]rune, theMaze.Height+2)
+	for y := -1; y < theMaze.Height+1; y++ {
+		disp[y+1] = make([]rune, theMaze.Width+2)
+		for x := -1; x < theMaze.Width+1; x++ {
 			c, ok := mazeCharacters[theMaze.wallShape(x, y)]
 			if ok {
-				fmt.Printf("%c", c)
+				disp[y+1][x+1] = c
 			} else {
-				fmt.Printf(" ")
+				disp[y+1][x+1] = ' '
 			}
 		}
-		fmt.Println()
+	}
+
+	// show path?
+	if len(theMaze.StartingPosition) == 2 {
+		disp[theMaze.StartingPosition[1]+1][theMaze.StartingPosition[0]+1] = mazeCharacters["Start"]
+	}
+	if len(sol) > 0 {
+		x := theMaze.StartingPosition[0]
+		y := theMaze.StartingPosition[1]
+		for _, r := range sol {
+			switch r {
+			case 'N':
+				y--
+			case 'S':
+				y++
+			case 'E':
+				x++
+			case 'W':
+				x--
+			}
+			disp[y+1][x+1] = mazeCharacters["Path"]
+		}
+	}
+	if len(theMaze.EndingPosition) == 2 {
+		disp[theMaze.EndingPosition[1]+1][theMaze.EndingPosition[0]+1] = mazeCharacters["End"]
+	}
+
+	// output
+	for _, r := range disp {
+		fmt.Println(string(r))
 	}
 }
 
