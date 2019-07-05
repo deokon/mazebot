@@ -2,15 +2,21 @@ package main
 
 import "fmt"
 
+type node []int
+
+func (n node) toString() string {
+	return fmt.Sprintf("%d,%d", n[0], n[1])
+}
+
 type maze struct {
-	Name            string
-	MazePath        string
-	StatingPosition []int
-	EndingPosition  []int
-	Message         string
-	Map             [][]string
-	Width           int
-	Height          int
+	Name             string
+	MazePath         string
+	StartingPosition node
+	EndingPosition   node
+	Message          string
+	Map              [][]string
+	Width            int
+	Height           int
 }
 
 type solutionResponse struct {
@@ -49,6 +55,22 @@ func (theMaze maze) isWall(x, y int) bool {
 		return true
 	}
 	return theMaze.Map[y][x] == "X"
+}
+
+func (theMaze maze) neighbors(n node) (ne []node) {
+	if !theMaze.isWall(n[0]-1, n[1]) {
+		ne = append(ne, node{n[0] - 1, n[1]})
+	}
+	if !theMaze.isWall(n[0], n[1]-1) {
+		ne = append(ne, node{n[0], n[1] - 1})
+	}
+	if !theMaze.isWall(n[0]+1, n[1]) {
+		ne = append(ne, node{n[0] + 1, n[1]})
+	}
+	if !theMaze.isWall(n[0], n[1]+1) {
+		ne = append(ne, node{n[0], n[1] + 1})
+	}
+	return
 }
 
 func (theMaze maze) wallShape(x, y int) string {

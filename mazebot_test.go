@@ -1,17 +1,36 @@
 package main
 
-// func TestMaze(t *testing.T) {
-// 	cases := []struct {
-// 		rules   []fbRule
-// 		numbers []int
-// 		want    string
-// 	}{
-// 		{[]fbRule{{2, "Two"}, {3, "Three"}}, []int{1, 2, 3, 4, 5, 6}, "1 Two Three Two 5 TwoThree"},
-// 	}
-// 	for _, c := range cases {
-// 		got := answer(c.rules, c.numbers)
-// 		if got != c.want {
-// 			t.Errorf("answer(%v, %v) == %v, want %v", c.rules, c.numbers, got, c.want)
-// 		}
-// 	}
-// }
+import "testing"
+
+func TestMaze(t *testing.T) {
+	cases := []struct {
+		in   maze
+		want string
+	}{
+		{maze{
+			Name:             "Maze Test 1",
+			StartingPosition: []int{4, 3},
+			EndingPosition:   []int{3, 6},
+			Map: [][]string{
+				{" ", " ", "X", " ", " ", " ", "X", " ", "X", "X"},
+				{" ", "X", " ", " ", " ", " ", " ", " ", " ", " "},
+				{" ", "X", " ", "X", "X", "X", "X", "X", "X", " "},
+				{" ", "X", " ", " ", "A", " ", " ", " ", "X", " "},
+				{" ", "X", "X", "X", "X", "X", "X", "X", " ", " "},
+				{"X", " ", " ", " ", "X", " ", " ", " ", "X", " "},
+				{" ", " ", "X", "B", "X", " ", "X", " ", "X", " "},
+				{" ", " ", "X", " ", "X", " ", "X", " ", " ", " "},
+				{"X", " ", "X", "X", "X", "X", "X", " ", "X", "X"},
+				{"X", " ", " ", " ", " ", " ", " ", " ", "X", "X"},
+			},
+			Width:  10,
+			Height: 10,
+		}, "WWNNEEEEEEESSSSSSWWSSWWWWWWNNNNEES"},
+	}
+	for _, c := range cases {
+		got := solve(c.in)
+		if got != c.want {
+			t.Errorf("solve(%v) == %v, want %v", c.in.Name, got, c.want)
+		}
+	}
+}
