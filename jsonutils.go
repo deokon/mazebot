@@ -10,7 +10,7 @@ import (
 
 type jsonType map[string]interface{}
 
-func jsonGet(url string, result interface{}) {
+func jsonGet(url string, result interface{}) int {
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Fatalln(err)
@@ -22,9 +22,11 @@ func jsonGet(url string, result interface{}) {
 	}
 
 	json.Unmarshal(body, &result)
+
+	return resp.StatusCode
 }
 
-func jsonPost(url string, content jsonType, result interface{}) {
+func jsonPost(url string, content jsonType, result interface{}) int {
 	contentEncoded, err := json.Marshal(content)
 	if err != nil {
 		log.Fatalln(err)
@@ -41,4 +43,6 @@ func jsonPost(url string, content jsonType, result interface{}) {
 	}
 
 	json.Unmarshal(body, &result)
+
+	return resp.StatusCode
 }

@@ -19,13 +19,14 @@ type maze struct {
 	Height           int
 }
 
-type solutionResponse struct {
+type mazeResponse struct {
 	Result                 string
 	Message                string
-	ShortestSolutionLength string
-	YourSolutionlength     string
+	ShortestSolutionLength int
+	YourSolutionlength     int
 	Elapsed                int
 	NextMaze               string
+	Certificate            string
 }
 
 var mazeCharacters = map[string]rune{
@@ -48,25 +49,6 @@ var mazeCharacters = map[string]rune{
 	"Start":  'S',
 	"End":    'E',
 	"Path":   '\u2593',
-	// "X:    ": '\u2593',
-	// "X:X   ": '\u2593',
-	// "X: X  ": '\u2593',
-	// "X:  X ": '\u2593',
-	// "X:   X": '\u2593',
-	// "X:XX  ": '\u2593',
-	// "X:X X ": '\u2593',
-	// "X:X  X": '\u2593',
-	// "X: XX ": '\u2593',
-	// "X: X X": '\u2593',
-	// "X:  XX": '\u2593',
-	// "X:XXX ": '\u2593',
-	// "X:XX X": '\u2593',
-	// "X:X XX": '\u2593',
-	// "X: XXX": '\u2593',
-	// "X:XXXX": '\u2593',
-	// "Start":  'S',
-	// "End":    'E',
-	// "Path":   '*',
 }
 
 func (theMaze maze) isWall(x, y int) bool {
@@ -126,7 +108,7 @@ func (theMaze maze) wallShape(x, y int) string {
 }
 
 func (theMaze maze) display(sol string) {
-	fmt.Printf("---------------------------\nName: %v\nPath: %v\n%v\n---------------------------\n", theMaze.Name, theMaze.MazePath, theMaze.Message)
+	fmt.Printf("\nMaze: %v\n\n", theMaze.Name)
 
 	// layout the maze walls
 	disp := make([][]rune, theMaze.Height+2)
@@ -170,6 +152,10 @@ func (theMaze maze) display(sol string) {
 	// output
 	for _, r := range disp {
 		fmt.Println(string(r))
+	}
+
+	if len(sol) > 0 {
+		fmt.Printf("Solution: %v\n", sol)
 	}
 }
 
